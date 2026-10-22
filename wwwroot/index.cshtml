@@ -1,0 +1,36 @@
+@page "/"
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Измерение информации в сообщении</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container-fluid" style="max-width: 1200px;">
+        <header style="background: #1976d2; padding: 2rem; border-radius: 8px; margin-bottom: 2rem;">
+            <h1 style="color: white;">Измерение информации в сообщении</h1>
+            <p style="color: rgba(255,255,255,0.8);">Обучающее веб-приложение на C# / Blazor</p>
+        </header>
+
+        <!-- Карточки с обзором -->
+        @for (int i = 1; i <= 3; i++) {
+            <div class="card" style="background: #1a237e; color: white; margin-bottom: 1rem;">
+                <div class="card-header" style="background: #4fc3f7; color: #1a237e; font-weight: bold;">
+                    @i. Основное
+                </div>
+                <div class="card-body">
+                    @* Здесь содержимое карточки *@
+                </div>
+            </div>
+        }
+
+        <!-- Подвал -->
+        <footer style="background: #0b0825; padding: 1rem; text-align: center; color: rgba(255,255,255,0.7);">
+          © Стив А. · Проект по информатике 2026
+        </footer>
+
+    </div>
+</body>
+</html>

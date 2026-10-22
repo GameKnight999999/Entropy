@@ -1,0 +1,66 @@
+/* Трон: Наследие стиль */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #1a237e url('@/images/tron-bg.png') no-repeat center fixed;
+    color: #e0e0e0;
+}
+
+/* Неоновое свечение для элементов */
+.neon-glow {
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.7);
+    box-shadow: 0 0 16px rgba(255, 255, 255, 0.3);
+}
+
+/* Карточки */
+.card {
+    background: #1a237e;
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+/* Кнопки */
+.btn-primary {
+    background: linear-gradient(90deg, #4fc3f7, #29b6f6);
+    color: #1a237e;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 4px;
+}
+
+.btn-secondary {
+    background: linear-gradient(90deg, #757575, #616161);
+    color: #fff;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 4px;
+}
+
+/* Ввод данных */
+.input-group {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    padding: 1rem;
+}
+
+.label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #a8dadc;
+}
+
+.input-box {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 2px solid #4fc3f7;
+}
+
+/* Формулы */
+.formula-box {
+    background: #e3f2fd;
+    color: #1976d2;
+    padding: 1rem;
+    border-radius: 8px;
+}

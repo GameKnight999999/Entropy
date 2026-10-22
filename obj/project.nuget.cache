@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "a3vZVOQgis8=",
+  "success": true,
+  "projectFilePath": "/home/stepa/c#/Entropy/Entropy.csproj",
+  "expectedPackageFiles": [
+    "/home/stepa/.nuget/packages/microsoft.aspnetcore.app.internal.assets/10.0.13/microsoft.aspnetcore.app.internal.assets.10.0.13.nupkg.sha512",
+    "/home/stepa/.nuget/packages/microsoft.aspnetcore.app.ref/10.0.13/microsoft.aspnetcore.app.ref.10.0.13.nupkg.sha512"
+  ],
+  "logs": []
+}
