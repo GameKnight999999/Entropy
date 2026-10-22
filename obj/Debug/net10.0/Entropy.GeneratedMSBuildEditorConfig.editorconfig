@@ -29,3 +29,7 @@ build_metadata.AdditionalFiles.CssScope =
 [/home/stepa/c\#/Entropy/wwwroot/index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = d3d3cm9vdC9pbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
+
+[/home/stepa/c\#/Entropy/Pages/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 

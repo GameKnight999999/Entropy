@@ -1,8 +1,8 @@
 # Сборка
-**/*.dll
-**/*.exe
-bin/
-obj/
+*.dll
+*.exe
+/bin/
+/obj/
 
 # Операционные системы
 .DS_Store
