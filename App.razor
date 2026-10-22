@@ -1,46 +1,57 @@
-@page "/example"
+@page "/learn"
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="utf-8" />
-    <style>body { font-family:'Segoe UI'; background:linear-gradient(180deg, #e8f5ec 0%, #fff 100%); }</style>
+    <title>Теория информации | Entropy App</title>
+    <link href="_content/Microsoft.AspNetCore.Components.Web/Components/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/app.css" rel="stylesheet" />
+    <style>
+        .learn-container { padding: 2rem; max-width: 1100px; margin: 0 auto; }
+        .chapter-card { background: linear-gradient(135deg, rgba(79,195,247,0.1), rgba(26,35,126,0.8)); border-radius: 16px; padding: 2rem; margin-bottom: 2rem; }
+        .chapter-title { font-family: 'Orbitron'; color: var(--tron-neon-blue); margin-bottom: 1rem; }
+    </style>
 </head>
-<body style="min-height:100vh;">
+<body>
+    <div class="learn-container">
+        <header class="tron-header">
+            <a href="/welcome" style="text-decoration: none; font-family: 'Orbitron'; color: white;">← Назад</a>
+        </header>
 
-<header style="background:#e8f5ec;padding:.5rem;text-align:center;">
-    <h1 style="margin:.2rem 0;color:#1a237e;">Измерение информации в сообщении</h1>
-    <p style="color:#4fc3f7;font-size:.8rem;margin:0;">Formula V = N · log₂(I)</p>
-</header>
+        <main>
+            <article class="chapter-card">
+                <h2 class="chapter-title">🍀 Глава 1. Что такое информация?</h2>
+                <details open>
+                    <summary style="cursor: pointer;">Что такое энтропия?</summary>
+                    <div class="code-block">
+                        Информация — это устранение неопределённости.<br/>
+                        Энтропия H = log₂(I) бит/символ
+                    </div>
+                </details>
+            </article>
 
-<div style="max-width:950px;margin:.5rem auto;padding:0 .2rem;">
+            <article class="chapter-card">
+                <h2 class="chapter-title">🔢 Глава 2. Формула V = N · log₂(I)</h2>
+                <details open>
+                    <summary style="cursor: pointer;">Основная формула</summary>
+                    <div style="padding: 1rem; background: rgba(79,195,247,0.1); border-radius: 8px;">
+                        V = N · log₂(I)<br/>
+                        V — объём (бит), N — длина сообщения (символы), I — мощность алфавита
+                    </div>
+                </details>
+            </article>
 
-<!-- Шаг 1: Формула -->
-<section style="background:white;padding:1.5rem;border-radius:12px;margin-top:.5rem;box-shadow:0 2px 8px rgba(79,195,247,0.2);">
-    <h2 style="margin:.2rem 0;color:#1976d2;">Шаг 1. Основная формула</h2>
-    @* Формула для расчёта объёма *@
-    <div style="background:#e8f5ec;padding:1rem;margin:.5rem 0;border-radius:8px;">
-        <strong>V = N · log₂(I)</strong><br/>
-        — Объём V в битах, N — длина сообщения в символах, I — мощность алфавита.
+            <article class="chapter-card">
+                <h2 class="chapter-title">💡 Глава 3. Пример</h2>
+                Н = 4 символа, I = 3 состояния<br/>
+                V = 4 × log₂(3) ≈ @(string.Format("{0:F2}", 4 * Math.Log(3,2))) бит
+            </article>
+        </main>
+
+        <footer class="tron-footer">
+            <a href="/welcome" style="color: var(--tron-neon-blue);">← На главную</a>
+        </footer>
     </div>
-    
-    <!-- Пример расчёта по шагам -->
-    @if (step <= steps)
-    {
-        <p style="margin:.5rem 0;">Текущий шаг: @(step + 1). Перехожу к формуле.</p>
-    }
-</section>
-
-<!-- Шаги навигации -->
-<div style="text-align:center;margin-top:.5rem;">
-    <button onclick="" location.href='/welcome'" style="background:#4fc3f7;border:none;padding:.8rem 1.5rem;">← На главную</button>
-</div>
-
-</div>
 </body>
 </html>
-
-@code {
-    /// <summary>Нивигация между шагами примера (до действия и после него)</summary>
-    int step => 0;
-    const int steps = 3; // Максимум для демо-навигации
-}
+@code { }

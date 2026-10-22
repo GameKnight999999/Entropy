@@ -1,0 +1,101 @@
+@page "/"
+@using Microsoft.Extensions.Localization
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Измерение информации в сообщении — Entropy App</title>
+    <link href="_content/Microsoft.AspNetCore.Components.Web/Components/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../css/app.css" rel="stylesheet" />
+    <style>
+        body { background: #0a1930; color: #d0eaff; font-family: 'Segoe UI', Arial, sans-serif; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 1.5rem; }
+        .tron-card { background: rgba(79,195,247,0.08); border: 1px solid var(--tron-neon-blue); border-radius: 16px; padding: 1.5rem; margin-bottom: 1.5rem; }
+        h1, h2 { color: #4fc3f7; text-shadow: 0 0 8px rgba(79,195,247,0.5); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="/welcome" style="display: inline-block; color: #fff; text-decoration: none;">← К теории</a>
+        </header>
+
+        <main>
+            <h1>🍀 Измерение информации в сообщениях</h1>
+
+            <div style="display: grid; grid-template-columns: 1fr 400px; gap: 2rem;">
+                <section class="tron-card">
+                    <h2>Калькулятор</h2>
+                    <form onsubmit="OnCalculate(event)">
+                        <div style="margin-bottom: 1rem;">
+                            <label>Длина сообщения (N) — символы:</label><br/>
+                            <input type="number" id="N_input" value="4" min="1" max="2200000" placeholder="например, 4"/>
+                        </div>
+
+                        <div style="margin-bottom: 1rem;">
+                            <label>Мощность алфавита (I):</label><br/>
+                            <input type="number" id="I_input" value="3" min="2" placeholder="например, 3"/>
+                        </div>
+
+                        <button type="submit">Рассчитать 🍀</button>
+                    </form>
+
+                    <div style="padding: 0.5rem; margin-top: 1rem; color: rgba(255,255,255,0.7); font-size: 0.9em;">
+                        Введите значения и нажмите "Рассчитать"
+                    </div>
+                </section>
+
+                <div class="tron-card">
+                    <div id="resultArea" style="padding: 1rem; background: rgba(10,36,99,0.8); border-radius: 8px;">
+                        Используйте формулу <strong>V = N · log₂(I)</strong> — введите значения выше!
+                    </div>
+                </div>
+            </div>
+
+            <section class="tron-card">
+                <h3>📚 Формула</h3>
+                V = N · log₂(I)<br/>
+                где:
+                <ul style="text-align: left; margin-top: 0.5rem;">
+                    <li>N — длина сообщения (количество символов)</li>
+                    <li>I — мощность алфавита (состояний каждого символа)</li>
+                    <li>V — объём информации в битах</li>
+                </ul>
+            </section>
+        </main>
+
+        <footer style="text-align: center; padding: 1rem; color: #8faaff;">
+            © Entropy App 2026 — Изучение теории информации
+        </footer>
+    </div>
+
+    <script>
+        function OnCalculate(event) {
+            event.preventDefault();
+            const N = parseInt(document.getElementById('N_input').value) || 0;
+            const I = parseInt(document.getElementById('I_input').value) || 1;
+
+            if (N <= 0) {
+                alert('Длина сообщения должна быть положительной!');
+                return;
+            }
+            if (I < 2) {
+                alert('Мощность алфавита должна быть ≥ 2!');
+                return;
+            }
+
+            const log2I = Math.log(I) / Math.log(2);
+            const V_bits = N * log2I;
+            const V_bytes = (V_bits / 8).toFixed(3);
+
+            document.getElementById('resultArea').innerHTML = 
+                `<strong>V = ${N} × log₂(${I})</strong> ≈ <span style="color: #4fc3f7; font-size: 1.5em;">${V_bits.toFixed(2)}</span> бит<br/>
+                 (= <span style="color: #82b1ff;">${V_bytes}</span> байт)`;
+        }
+
+        // Запуск формулы при первой загрузке с примером 4 × log₂(3)
+        OnCalculate(null);
+    </script>
+</body>
+</html>
