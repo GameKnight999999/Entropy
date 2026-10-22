@@ -11,8 +11,6 @@ builder.WebHost.UseUrls("http://*:5184");
 
 var app = builder.Build();
 
-app.UseHttpsRedirection();
-
 // Включаем Razor Pages - корень '/' автоматически обрабатываем через MapRazorPages()
 app.MapRazorPages();
 

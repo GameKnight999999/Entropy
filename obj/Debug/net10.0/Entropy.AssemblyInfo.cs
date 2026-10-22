@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Entropy")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2addbdc3a833b3b333c03d2e36bc3adf4d21cea3")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+48bda69dc21a083475a84e475cdd7b8ece9cd196")]
 [assembly: System.Reflection.AssemblyProductAttribute("Entropy")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Entropy")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

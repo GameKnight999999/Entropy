@@ -1,118 +1,117 @@
-using System.Collections.Generic;
+using System.Globalization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Entropy.Pages
+namespace Entropy.Pages;
+
+/// <summary>Описание готового алфавита из списка.</summary>
+public sealed record AlphabetInfo(string Key, string Name, int Size);
+
+/// <summary>Модель страницы: интерактивный калькулятор объёма информации.</summary>
+public class IndexModel : PageModel
 {
-    public class IndexModel : PageModel
+    // Границы по ТЗ
+    public const int MinN = 5;
+    public const int MaxN = 256;
+    public const int MinKBits = 1;
+    public const int MaxKBits = 8;
+
+    /// <summary>Готовые алфавиты из списка (мощности — по ТЗ).</summary>
+    public static readonly IReadOnlyList<AlphabetInfo> Alphabets = new List<AlphabetInfo>
     {
-        public int CurrentStep { get; set; } = 0;
-        
-        /// <summary>Мощность русского алфавита</summary>
-        public const int RUSSIAN_ALPHABET_SIZE = 33;   // Кириллица + ~3 пропущенные
-        
-        /// <summary>Мощность английского алфавита с пробелом и знаками пунктуации</summary>
-        public const int ENGLISH_ALPHABET_SIZE = 26;    // Только буквы
-        
-        /// <summary>Мощность ASCII без управляющих символов</summary>
-        public const int ASCII_NO_CONTROL_SIZE = 95;    // Символы 0x20-0x7E
+        new("russian", "Русский", 33),
+        new("english", "Английский", 26),
+        new("ascii", "ASCII без управляющих", 95)
+    };
 
-        /// <summary>Максимальная длина сообщения</summary>
-        public const int MAX_N = 256;
+    /// <summary>Выбранный алфавит.</summary>
+    [BindProperty]
+    public string SelectedAlphabet { get; set; } = "russian";
 
-        /// <summary>Выбранный алфавит пользователя</summary>
-        public static string SelectedAlphabet { get; set; } = "russian";
+    /// <summary>Сколько бит на символ выбрал пользователь.</summary>
+    [BindProperty]
+    public int UserKBits { get; set; } = 6;
 
-        /// <summary>Текущая мощность выбранного алфавита</summary>
-        public static int AlphabetSize 
-        { 
-            get => SelectedAlphabet switch {
-                "russian" => RUSSIAN_ALPHABET_SIZE,
-                "english" => ENGLISH_ALPHABET_SIZE,
-                "ascii" => ASCII_NO_CONTROL_SIZE,
-                _ => RUSSIAN_ALPHABET_SIZE
-            };
-        }
+    /// <summary>Длина сообщения N (символы).</summary>
+    [BindProperty]
+    public int MessageLength { get; set; } = 7;
 
-        /// <summary>Выбранные пользователем биты на символ</summary>
-        public static int UserKBits { get; set; } = 3;  // По умолчанию безопасное значение
+    /// <summary>Ответ пользователя: объём сообщения в байтах (необязательно).</summary>
+    [BindProperty]
+    public int? UserVolumeBytes { get; set; }
 
-        /// <summary>Выводится ли предупреждение об ошибке недостаточных бит</summary>
-        public static bool ShowError => IsInsufficientBits;
+    public AlphabetInfo CurrentAlphabet =>
+        Alphabets.FirstOrDefault(a => a.Key == SelectedAlphabet) ?? Alphabets[0];
 
-        /// <summary>Является ли выбор k_bits допустимым (k_bits ≥ log₂(I))</summary>
-        public static bool IsInsufficientBits 
+    public string AlphabetName => CurrentAlphabet.Name;
+    public int AlphabetSize => CurrentAlphabet.Size;
+
+    /// <summary>Точное значение log₂(I).</summary>
+    public double ExactBitsPerChar => Math.Log2(AlphabetSize);
+
+    /// <summary>log₂(I) для отображения (2 знака, точка как разделитель).</summary>
+    public string ExactBitsPerCharText =>
+        ExactBitsPerChar.ToString("0.##", CultureInfo.InvariantCulture);
+
+    /// <summary>Минимальное целое число бит, достаточное для кодирования алфавита.</summary>
+    public int RequiredKBits => (int)Math.Ceiling(ExactBitsPerChar);
+
+    public bool IsKBitsInRange => UserKBits >= MinKBits && UserKBits <= MaxKBits;
+
+    /// <summary>Недостаточно бит: k_bits &lt; log₂(I).</summary>
+    public bool IsKBitsInsufficient => UserKBits < ExactBitsPerChar;
+
+    public bool IsNValid => MessageLength >= MinN && MessageLength <= MaxN;
+
+    /// <summary>Можно ли показывать результат.</summary>
+    public bool HasResult => IsNValid && IsKBitsInRange && !IsKBitsInsufficient;
+
+    /// <summary>Итоговый объём в битах: V = N × k_bits.</summary>
+    public int TotalBits => MessageLength * UserKBits;
+
+    /// <summary>Итоговый объём в байтах: ceil(V / 8), целочисленно.</summary>
+    public int TotalBytes => (TotalBits + 7) / 8;
+
+    /// <summary>Делится ли число бит на 8 нацело.</summary>
+    public bool IsExactBytes => TotalBits % 8 == 0;
+
+    /// <summary>Сколько групп бит показываем в визуализации (ограничение для больших N).</summary>
+    public int GroupsToShow => Math.Min(MessageLength, 16);
+
+    public bool HasVolumeAnswer => UserVolumeBytes.HasValue;
+
+    public bool IsVolumeAnswerCorrect => UserVolumeBytes == TotalBytes;
+
+    public string BitsWord(int n) => Plural(n, "бит", "бита", "бит");
+    public string CharsWord(int n) => Plural(n, "символ", "символа", "символов");
+    public string BytesWord(int n) => Plural(n, "байт", "байта", "байт");
+
+    public void OnGet()
+    {
+        // Значения по умолчанию уже заданы в свойствах.
+    }
+
+    public void OnPost()
+    {
+        // Защита от подмены значения алфавита в форме.
+        if (string.IsNullOrWhiteSpace(SelectedAlphabet) ||
+            !Alphabets.Any(a => a.Key == SelectedAlphabet))
         {
-            get => UserKBits < MinimumKBits && MessageLength > 0;  // Проверка только если N заполнено
-            set => errorDisabled = !value && MessageLength > 0;     // Запрет ошибки при редактировании
+            SelectedAlphabet = "russian";
         }
+    }
 
-        private static bool errorDisabled = true;  // Чтобы не показывать ошибку при первом заходе
+    /// <summary>Русская форма слова для числа: 1 символ, 2 символа, 5 символов.</summary>
+    private static string Plural(int n, string one, string few, string many)
+    {
+        var abs = Math.Abs(n) % 100;
+        if (abs is >= 11 and <= 19) return many;
 
-        /// <summary>Минимальное необходимое бит для кодирования полного алфавита</summary>
-        public static double MinimumKBits 
+        return (abs % 10) switch
         {
-            get => Math.Round(Math.Log(AlphabetSize) / Math.Log(2.0), 1);
-        }
-
-        /// <summary>Длина сообщения (символы)</summary>
-        public static int MessageLength { get; set; } = 7;
-
-        /// <summary>Введённое пользователем значение объема в битах</summary>
-        public static int? UserEnteredVolumeBits { get; set; }
-
-        /// <summary>Допустимый диапазон для N</summary>
-        public static bool OutOfNRange => MessageLength < 5 || MessageLength > MAX_N;
-
-        /// <summary>Имя выбранного алфавита</summary>
-        public static string AlphabetName 
-        {
-            get => SelectedAlphabet == "russian" ? "Русский" :
-                       SelectedAlphabet == "english" ? "Английский" : 
-                       "ASCII без управляющих";
-        }
-
-        /// <summary>Всего бит в сообщении</summary>
-        public static int TotalBits => MessageLength * UserKBits;
-
-        /// <summary>Объем в байтах (округление вверх до полного байта)</summary>
-        public static byte ByteCount => (byte)Math.Ceiling(TotalBits / 8.0);
-
-        /// <summary>Является ли объём целое число бит (не нужно округлять)</summary>
-        public static bool IsExactBitCount => TotalBits % 8 == 0;
-
-        /// <summary>Смена выбранного алфавита</summary>
-        public static void SetAlphabet(string newAlphabet)
-        {
-            SelectedAlphabet = newAlphabet;
-            
-            var newSize = newAlphabet switch {
-                "russian" => RUSSIAN_ALPHABET_SIZE,
-                "english" => ENGLISH_ALPHABET_SIZE,
-                "ascii" => ASCII_NO_CONTROL_SIZE,
-                _ => RUSSIAN_ALPHABET_SIZE
-            };
-
-            // В этом методе используется только чтение свойств, не нужны backing fields
-        }
-
-        /// <summary>Рассчитывает объём при изменении N</summary>
-        public static void Recalculate()
-        {
-            // Расчет происходит автоматически в свойствах
-        }
-
-        /// <summary>Статические примеры</summary>
-        public static readonly List<(int N, int I, string Type)> Examples = new()
-        {
-            (N: 5, I: 4, Type: "intro"),       // Вводный пример (I=2²=4)
-            (N: 8, I: 16, Type: "baseA"),      // Основной пример А  
-            (N: 10, I: 32, Type: "baseB")      // Основной пример Б
+            1 => one,
+            2 or 3 or 4 => few,
+            _ => many
         };
-
-        public static readonly List<int> Powers = new() { 2, 4, 8, 10, 12, 16, 20, 32, 64, 128 };
-
-        /// <summary>Фиксированные значения для самостоятельной задачи</summary>
-        public static readonly int Exercise_N = 12;     
-        public static readonly int Exercise_I = 16;      
     }
 }
