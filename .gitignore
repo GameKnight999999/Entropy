@@ -1,0 +1,14 @@
+# Сборка
+**/*.dll
+**/*.exe
+bin/
+obj/
+
+# Операционные системы
+.DS_Store
+
+# IDE (упрощено)
+.vscode/
+.idea/
+*.user
+*.suo
